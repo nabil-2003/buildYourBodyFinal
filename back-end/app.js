@@ -44,7 +44,9 @@ mongoose.connect(process.env.MONGO_URI, {
   app.use('/api/auth', authRoutes);
 app.use('/api/plans', trainingPlanRoutes);
 app.use('/api/coach', coachAIRoutes);
-
+app.get('/', (req, res) => {
+  res.send('🚀 Backend is up and running!');
+});
 
 // Test endpoint to verify server is working
 
