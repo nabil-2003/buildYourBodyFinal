@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* Base styles for better defaults */
+html {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: inherit;
+  line-height: inherit;
+  background-color: #0f172a;
+  color: #f1f5f9;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure Tailwind utilities work properly */
+* {
+  box-sizing: border-box;
+}
+
+/* Focus outline improvements */
+*:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.8s ease-out;
+}
+
+/* Initial states for animated elements */
+.service,
+.contact-form,
+.contact-info,
+.mission-vision,
+.feature-item,
+.team-member,
+.story-section,
+.stats-section,
+.video-card,
+.workout-day,
+.exercise-item,
+.nutrition-section,
+.calculator-container,
+.result-card,
+.chat-container,
+.feature-box,
+.login-container,
+.login-title,
+.login-form,
+.signup-container,
+.signup-title,
+.signup-form {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Animation classes for state changes */
+.animate-completed {
+  animation: bounceIn 0.6s ease-out;
+}
+
+.animate-progress {
+  animation: slideUp 0.4s ease-out;
+}
