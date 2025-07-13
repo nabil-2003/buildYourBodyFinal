@@ -25,6 +25,7 @@ const {fetchPlan} = usePlan();
 
   const handleLogOut = () => {
     logout();
+    location.reload()
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
