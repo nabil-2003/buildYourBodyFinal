@@ -26,7 +26,7 @@ const {fetchPlan} = usePlan();
 
   const handleLogOut = () => {
     logout();
-    navigate("/login")
+    location.reload()
      
   };
 
