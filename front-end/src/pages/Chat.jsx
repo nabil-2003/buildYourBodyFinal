@@ -23,9 +23,7 @@ const Chat = () => {
   }, [chatBotState.oldMessages]);
 
   // تمرير تلقائي للأسفل بعد إضافة رسالة
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+ 
 
   // عندما يصل رد من AI، نضيفه للمحادثة
   useEffect(() => {
@@ -44,9 +42,7 @@ const Chat = () => {
     }
   }, [chatBotState.response]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+
 
   const handleSendMessage = (e) => {
     e.preventDefault();
