@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import useAI from '../hooks/useAI';
 import { setPlan } from '../reducers/PlanReducer';
 import usePlan from '../hooks/usePlan';
-
+//plan data
 const PlanPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
