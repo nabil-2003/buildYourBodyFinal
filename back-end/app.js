@@ -24,7 +24,7 @@ app.use(limiter); // Apply rate limiting middleware
 app.use(helmet()); // Use Helmet for security headers
 // Updated CORS configuration
 app.use(cors({ 
-  origin: '*',
+  origin: process.env.FRONT_END,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
