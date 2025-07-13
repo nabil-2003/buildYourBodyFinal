@@ -400,7 +400,7 @@ const PlanPage = () => {
                         {/* Food Tracking */}
                         <div className="space-y-4">
                           <h4 className="text-white font-semibold mb-3">Food Intake</h4>
-                          <div className="className="flex flex-col sm:flex-row gap-3"">
+                          <div className="flex flex-col sm:flex-row gap-3">
                             <input
                               type="text"
                               value={currentFoodInputs?.[dayIndex] || ''}
