@@ -15,17 +15,13 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // تحميل الرسائل القديمة من Redux
+  // the old MSG Redux
   useEffect(() => {
     if (chatBotState.oldMessages?.length) {
       setMessages([...chatBotState.oldMessages]);
     }
   }, [chatBotState.oldMessages]);
 
-  // تمرير تلقائي للأسفل بعد إضافة رسالة
- 
-
-  // عندما يصل رد من AI، نضيفه للمحادثة
   useEffect(() => {
     if (chatBotState.response) {
       const aiResponse = {
