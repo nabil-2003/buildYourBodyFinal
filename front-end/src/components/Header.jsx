@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
@@ -8,6 +8,7 @@ import usePlan from '../hooks/usePlan';
 
 const Header = () => {
 const {fetchPlan} = usePlan();
+  const navigate = useNavigate()
   const { user } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
       useEffect(() => {
@@ -25,7 +26,8 @@ const {fetchPlan} = usePlan();
 
   const handleLogOut = () => {
     logout();
-    location.reload()
+    navigate("/login")
+     
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
