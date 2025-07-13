@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import anime from 'animejs';
 import Header from '../components/Header';
-
+//calcul
 const Calculator = () => {
   const [activeTab, setActiveTab] = useState('bmi');
   const [formData, setFormData] = useState({
