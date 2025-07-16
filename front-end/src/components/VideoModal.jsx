@@ -1,6 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 const VideoModal = ({ isOpen, onClose, video }) => {
+  const [videoData, setVideoData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  // Fetch real video data from YouTube API
+  useEffect(() => {
+    if (!isOpen || !video || !video.videoId || !YOUTUBE_API_KEY) {
+      setVideoData(null);
+      setError(null);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${video.videoId}&key=${YOUTUBE_API_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.items && data.items.length > 0) {
+          setVideoData(data.items[0]);
+        } else {
+          setVideoData(null);
+          setError('Video data not found.');
+        }
+      })
+      .catch(() => setError('Failed to fetch video data.'))
+      .finally(() => setLoading(false));
+  }, [isOpen, video]);
+
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
@@ -20,6 +48,18 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   }, [isOpen, onClose]);
 
   if (!isOpen || !video) return null;
+
+  // Helper to format ISO 8601 duration (e.g. PT10M30S)
+  function formatDuration(isoDuration) {
+    if (!isoDuration) return '';
+    const match = isoDuration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return '';
+    const [, h, m, s] = match.map(x => x ? parseInt(x) : 0);
+    return [h, m, s]
+      .map((v, i) => (i === 0 && v === 0 ? null : v.toString().padStart(2, '0')))
+      .filter(Boolean)
+      .join(':');
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -42,6 +82,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         </button>
 
         {/* Video Player */}
+
         <div className="relative w-full aspect-video">
           <iframe
             src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&rel=0&modestbranding=1`}
@@ -56,17 +97,29 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         {/* Video Info */}
         <div className="p-6">
           <h2 className="text-2xl font-bold text-white mb-3">
-            {video.title}
+            {videoData ? videoData.snippet.title : video.title}
           </h2>
-          <div className="flex items-center gap-4 text-gray-400 mb-4">
-            <span>{video.views} views</span>
-            <span>•</span>
-            <span>{video.duration}</span>
-            <span>•</span>
-            <span>{new Date(video.publishedAt).toLocaleDateString()}</span>
-          </div>
+          {loading ? (
+            <div className="text-gray-400 mb-4">Loading video data...</div>
+          ) : error ? (
+            <div className="text-red-400 mb-4">{error}</div>
+          ) : videoData ? (
+            <div className="flex items-center gap-4 text-gray-400 mb-4">
+              <span>{parseInt(videoData.statistics.viewCount).toLocaleString()} views</span>
+              <span>•</span>
+              <span>{formatDuration(videoData.contentDetails.duration)}</span>
+              <span>•</span>
+              <span>{new Date(videoData.snippet.publishedAt).toLocaleDateString()}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4 text-gray-400 mb-4">
+              <span>{video.views} views</span>
+              <span>•</span>
+              <span>{video.duration}</span>
+            </div>
+          )}
           <p className="text-gray-300 leading-relaxed">
-            {video.description}
+            {videoData ? videoData.snippet.description : video.description}
           </p>
         </div>
       </div>
