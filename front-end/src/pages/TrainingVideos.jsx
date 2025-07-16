@@ -60,23 +60,48 @@ const TrainingVideos = () => {
             const data = await response.json();
             
             if (data.items && data.items.length > 0) {
-              // Transform YouTube data to our format
-              const transformedVideos = data.items.map((item, index) => ({
-                id: item.id.videoId,
-                videoId: item.id.videoId, // Fix: add videoId for VideoModal
-                title: item.snippet.title,
-                description: item.snippet.description,
-                thumbnail: item.snippet.thumbnails.high.url,
-                duration: '10:00', // Default duration
-                views: Math.floor(Math.random() * 100000) + 1000, // Random views
-                category: getCategoryFromTitle(item.snippet.title),
-                videoUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`
-              }));
-              
+              // Fetch video details for all videoIds
+              const videoIds = data.items.map(item => item.id.videoId).join(",");
+              let detailsMap = {};
+              if (YOUTUBE_API_KEY && videoIds) {
+                try {
+                  const detailsRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics,snippet&id=${videoIds}&key=${YOUTUBE_API_KEY}`);
+                  const detailsData = await detailsRes.json();
+                  if (detailsData.items) {
+                    detailsMap = Object.fromEntries(detailsData.items.map(item => [item.id, item]));
+                  }
+                } catch {}
+              }
+              // Helper to format ISO 8601 duration (e.g. PT10M30S)
+              function formatDuration(isoDuration) {
+                if (!isoDuration) return '';
+                const match = isoDuration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+                if (!match) return '';
+                const [, h, m, s] = match.map(x => x ? parseInt(x) : 0);
+                return [h, m, s]
+                  .map((v, i) => (i === 0 && v === 0 ? null : v.toString().padStart(2, '0')))
+                  .filter(Boolean)
+                  .join(':');
+              }
+              // Transform YouTube data to our format with real stats
+              const transformedVideos = data.items.map((item) => {
+                const details = detailsMap[item.id.videoId];
+                return {
+                  id: item.id.videoId,
+                  videoId: item.id.videoId,
+                  title: item.snippet.title,
+                  description: item.snippet.description,
+                  thumbnail: item.snippet.thumbnails.high.url,
+                  duration: details ? formatDuration(details.contentDetails.duration) : '10:00',
+                  views: details ? parseInt(details.statistics.viewCount) : (Math.floor(Math.random() * 100000) + 1000),
+                  publishedAt: details ? details.snippet.publishedAt : null,
+                  category: getCategoryFromTitle(item.snippet.title),
+                  videoUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`
+                };
+              });
               // Limit to 200 videos and save to backup
               const limitedVideos = transformedVideos.slice(0, MAX_BACKUP_VIDEOS);
               backupManager.updateBackup(limitedVideos);
-              
               videoList = limitedVideos;
             }
           }
@@ -299,8 +324,16 @@ const TrainingVideos = () => {
                       </p>
                       <div className="flex items-center justify-between">
                         <span className="text-gray-400 text-sm">
-                          {video.views} views
+                          {video.views?.toLocaleString()} vues
                         </span>
+                        <span className="text-gray-400 text-sm">
+                          {video.duration}
+                        </span>
+                        {video.publishedAt && (
+                          <span className="text-gray-400 text-sm">
+                            {new Date(video.publishedAt).toLocaleDateString()}
+                          </span>
+                        )}
                         <span className="text-orange-500 text-sm font-medium">
                           {categories.find(cat => cat.id === video.category)?.name}
                         </span>
