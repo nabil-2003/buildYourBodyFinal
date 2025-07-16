@@ -6,7 +6,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   const [videoData, setVideoData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // Fetch real video data from YouTube API
+  // Fetch only views and duration from YouTube API
   useEffect(() => {
     if (!isOpen || !video || !video.videoId || !YOUTUBE_API_KEY) {
       setVideoData(null);
@@ -15,7 +15,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
     }
     setLoading(true);
     setError(null);
-    fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${video.videoId}&key=${YOUTUBE_API_KEY}`)
+    fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${video.videoId}&key=${YOUTUBE_API_KEY}`)
       .then(res => res.json())
       .then(data => {
         if (data.items && data.items.length > 0) {
@@ -97,7 +97,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         {/* Video Info */}
         <div className="p-6">
           <h2 className="text-2xl font-bold text-white mb-3">
-            {videoData ? videoData.snippet.title : video.title}
+            {video.title}
           </h2>
           {loading ? (
             <div className="text-gray-400 mb-4">Loading video data...</div>
@@ -105,22 +105,17 @@ const VideoModal = ({ isOpen, onClose, video }) => {
             <div className="text-red-400 mb-4">{error}</div>
           ) : videoData ? (
             <div className="flex items-center gap-4 text-gray-400 mb-4">
-              <span>{parseInt(videoData.statistics.viewCount).toLocaleString()} views</span>
+              <span>{parseInt(videoData.statistics.viewCount).toLocaleString()} vues</span>
               <span>•</span>
               <span>{formatDuration(videoData.contentDetails.duration)}</span>
-              <span>•</span>
-              <span>{new Date(videoData.snippet.publishedAt).toLocaleDateString()}</span>
             </div>
           ) : (
             <div className="flex items-center gap-4 text-gray-400 mb-4">
-              <span>{video.views} views</span>
+              <span>{video.views} vues</span>
               <span>•</span>
               <span>{video.duration}</span>
             </div>
           )}
-          <p className="text-gray-300 leading-relaxed">
-            {videoData ? videoData.snippet.description : video.description}
-          </p>
         </div>
       </div>
     </div>
