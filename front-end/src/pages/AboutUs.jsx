@@ -282,8 +282,8 @@ export default function AboutUs() {
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li><a href="/" className="hover:text-red-400 transition-colors">Home</a></li>
                 <li><a href="/about" className="hover:text-red-400 transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-red-400 transition-colors">Training Routes</a></li>
-                <li><a href="#" className="hover:text-red-400 transition-colors">AI Coach</a></li>
+                <li><a href="/myPlan" className="hover:text-red-400 transition-colors">my plan </a></li>
+                <li><a href="/chat" className="hover:text-red-400 transition-colors">AI Coach</a></li>
               </ul>
             </div>
             
