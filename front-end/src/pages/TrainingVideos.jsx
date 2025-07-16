@@ -53,7 +53,7 @@ const TrainingVideos = () => {
             : FITNESS_SEARCH_TERMS[selectedCategory]?.[0] || 'fitness workout training';
             
           const response = await fetch(
-            https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchTerm)}&maxResults=50&order=relevance&type=video&videoDuration=medium&key=${YOUTUBE_API_KEY}
+            `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchTerm)}&maxResults=50&order=relevance&type=video&videoDuration=medium&key=${YOUTUBE_API_KEY}`
           );
           
           if (response.ok) {
@@ -63,13 +63,14 @@ const TrainingVideos = () => {
               // Transform YouTube data to our format
               const transformedVideos = data.items.map((item, index) => ({
                 id: item.id.videoId,
+                videoId: item.id.videoId, // Fix: add videoId for VideoModal
                 title: item.snippet.title,
                 description: item.snippet.description,
                 thumbnail: item.snippet.thumbnails.high.url,
                 duration: '10:00', // Default duration
                 views: Math.floor(Math.random() * 100000) + 1000, // Random views
                 category: getCategoryFromTitle(item.snippet.title),
-                videoUrl: https://www.youtube.com/watch?v=${item.id.videoId}
+                videoUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`
               }));
               
               // Limit to 200 videos and save to backup
@@ -230,11 +231,11 @@ const TrainingVideos = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={category-btn flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                  className={`category-btn flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                     selectedCategory === category.id
                       ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                  }}
+                  }`}
                 >
                   <span className="text-lg">{category.icon}</span>
                   {category.name}
@@ -336,5 +337,3 @@ const TrainingVideos = () => {
 };
 
 export default TrainingVideos; 
-
-
