@@ -68,7 +68,7 @@ const {fetchPlan} = usePlan();
                   : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
               }`}
             >
-              About
+              About Us
             </Link>
             
             {isAuthenticated && (
@@ -185,7 +185,7 @@ const {fetchPlan} = usePlan();
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                About
+                About Us
               </Link>
               
               {isAuthenticated && (
