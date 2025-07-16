@@ -1,6 +1,7 @@
 import "./App.css"
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import { Provider } from "react-redux";
 import AboutUs from './pages/AboutUs';
 import Login from './pages/Login';
@@ -23,11 +24,31 @@ function App() {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/calculator" element={<Calculator />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/videos" element={<TrainingVideos />} />
-        <Route path="/myPlan" element={<PlanPage />} />
-        <Route path="/plan-builder" element={<PlanBuilderPage />} />
+        <Route path="/calculator" element={
+          <ProtectedRoute>
+            <Calculator />
+          </ProtectedRoute>
+        } />
+        <Route path="/chat" element={
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        } />
+        <Route path="/videos" element={
+          <ProtectedRoute>
+            <TrainingVideos />
+          </ProtectedRoute>
+        } />
+        <Route path="/myPlan" element={
+          <ProtectedRoute>
+            <PlanPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/plan-builder" element={
+          <ProtectedRoute>
+            <PlanBuilderPage />
+          </ProtectedRoute>
+        } />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </Router>
